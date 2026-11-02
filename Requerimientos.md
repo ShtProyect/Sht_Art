@@ -1,92 +1,56 @@
-Documento de Requerimientos — Sht_Art
+# Documento de Requerimientos — Sht_Art
 
 Versión: 0.1
 Proyecto: Sht_Art
 Origen: Requerimientos entregados por el cliente.
 
-1. Requerimientos funcionales
+---
 
-ID
+## 1. Requerimientos funcionales
 
-Requerimiento
+ID          Requerimiento               Descripción
 
-Descripción
+RF-01       Información de contacto     Mostrar correo electrónico e Instagram del artista.
 
-RF-01
+RF-02       Galería artística           Permitir visualizar las ilustraciones del artista.
 
-Información de contacto
+RF-03       Descripción de obras        Mostrar información o contexto debajo de cada ilustración.
 
-Mostrar correo electrónico e Instagram del artista.
+RF-04       Identidad visual            Mostrar el logo o nombre de usuario destacado.
 
-RF-02
+RF-05       Navegación dinámica         Permitir que las ilustraciones aparezcan progresivamente al desplazarse por la página.
 
-Galería artística
+---
 
-Permitir visualizar las ilustraciones del artista.
+## 2. Requerimientos no funcionales
 
-RF-03
+ID          Requerimiento               Descripción
 
-Descripción de obras
+RNF-01      Accesibilidad visual        Utilizar una interfaz cómoda para personas sensibles a luces y colores brillantes.
 
-Mostrar información o contexto debajo de cada ilustración.
+RNF-02      Diseño adaptable            Permitir el uso desde computadores y dispositivos móviles.
 
-RF-04
+RNF-03      Diseño visual               Utilizar una paleta sobria con tonos morados y burdeos.
 
-Identidad visual
+RNF-04      Usabilidad                  Mantener una navegación clara e intuitiva.
 
-Mostrar el logo o nombre de usuario destacado.
-
-RF-05
-
-Navegación dinámica
-
-Permitir que las ilustraciones aparezcan progresivamente al desplazarse por la página.
-
-2. Requerimientos no funcionales
-
-ID
-
-Requerimiento
-
-Descripción
-
-RNF-01
-
-Accesibilidad visual
-
-Utilizar una interfaz cómoda para personas sensibles a luces y colores brillantes.
-
-RNF-02
-
-Diseño adaptable
-
-Permitir el uso desde computadores y dispositivos móviles.
-
-RNF-03
-
-Diseño visual
-
-Utilizar una paleta sobria con tonos morados y burdeos.
-
-RNF-04
-
-Usabilidad
-
-Mantener una navegación clara e intuitiva.
+---
 
 3. Funcionalidades pendientes de confirmación
 
-Tienda online y venta de productos.
+* ** Tienda online y venta de productos.
 
-Sistema de pagos.
+* ** Sistema de pagos.
 
-Solicitudes de comisiones personalizadas.
+* ** Solicitudes de comisiones personalizadas.
 
-Sistema de donaciones.
+* ** Sistema de donaciones.
 
-Panel de administración para gestionar ilustraciones.
+* ** Panel de administración para gestionar ilustraciones.
 
-Estas funcionalidades deberán validarse con el cliente antes de incorporarse al alcance definitivo.
+* ** Estas funcionalidades deberán validarse con el cliente antes de incorporarse al alcance definitivo.
+
+---
 
 4. Resultado esperado
 
