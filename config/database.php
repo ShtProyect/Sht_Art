@@ -1,6 +1,6 @@
 <?php
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'galeria_dibujos');
+define('DB_NAME', 'Sht_art');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
