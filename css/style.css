@@ -1,0 +1,114 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+body { background: #f5f5f7; color: #333; min-height: 100vh; }
+
+/* Login */
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.login-container h1 { margin-bottom: 20px; text-align: center; color: #6366f1; }
+.login-container input,
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+.login-container button {
+    background: #6366f1;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.login-container button:hover { background: #4f46e5; }
+.error { color: #ef4444; margin-bottom: 15px; text-align: center; }
+
+/* Header */
+header {
+    background: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+header h1 { color: #6366f1; font-size: 22px; }
+nav { display: flex; gap: 15px; align-items: center; }
+nav a {
+    color: #6366f1;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+}
+nav a:hover { background: #eef2ff; }
+
+/* Galería */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-4px); }
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    background: #eef2ff;
+}
+.card h3 { padding: 12px 15px 4px; font-size: 16px; }
+.card p { padding: 0 15px; font-size: 13px; color: #666; }
+.card small { display: block; padding: 10px 15px 15px; color: #999; }
+
+/* Panel admin */
+.admin-panel {
+    max-width: 500px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.admin-panel h2 { margin-bottom: 20px; color: #6366f1; }
+.admin-panel input,
+.admin-panel textarea,
+.admin-panel button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+}
+.admin-panel textarea { min-height: 90px; resize: vertical; }
+.admin-panel button {
+    background: #6366f1;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.admin-panel button:hover { background: #4f46e5; }
+.mensaje {
+    padding: 12px;
+    background: #eef2ff;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    color: #4338ca;
+}
