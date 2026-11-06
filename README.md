@@ -1,33 +1,31 @@
-# Portafolio Artístico, Comisiones y Tienda en Línea
+# SHT — Portafolio artístico (prototipo actualizado)
 
-Este proyecto consiste en el desarrollo de una página web integral tipo portafolio para un cliente artista. El objetivo principal es ofrecer una plataforma centralizada para promocionar su obra, mostrar su trayectoria, gestionar solicitudes de comisiones personalizadas, recibir donaciones y comercializar obras originales junto con merchandising (stickers, pines y otros artículos variados).
+Esta versión adapta el proyecto PHP existente a la revisión del cliente: identidad SHT, paleta burdeos/turquesa, tema oscuro y claro, galería de mayor tamaño, descripciones, aparición progresiva al desplazarse, vista ampliada y contacto por correo/Instagram.
 
----
+## Ejecutar en XAMPP
+1. Copia la carpeta `Sht_Art` a `C:\xampp\htdocs\`.
+2. Inicia Apache en XAMPP. MySQL no es obligatorio para visualizar la portada de demostración.
+3. Abre `http://localhost/Sht_Art/`.
 
-## 🚀 Características Principales
+También puedes ejecutar desde la carpeta del proyecto: `php -S localhost:8000` y abrir `http://localhost:8000`.
 
-* **🎨 Galería de Arte:** Exhibición de las obras artísticas del cliente clasificadas por categorías y en alta resolución.
-* **📜 Trayectoria:** Sección dedicada a la biografía, exposiciones, reconocimientos y recorrido profesional del artista.
-* **💼 Gestión de Comisiones:** Sistema y formulario para gestionar solicitudes de obras personalizadas de forma estructurada.
-* **💖 Sistema de Donaciones:** Módulo para que los seguidores puedan apoyar financieramente el trabajo del artista.
-* **🛒 Tienda en Línea y Sistema de Compras:**
-  * Catálogo de productos (obras originales, stickers, pines, prints y artículos personalizados).
-  * Carrito de compras funcional e integración con pasarela de pago.
-* **📬 Sección de Contacto:** Formulario e información directa para dudas, cotizaciones y colaboraciones.
-* **📱 Diseño Responsive:** Interfaz 100% adaptable a dispositivos móviles, tablets y computadores utilizando **Bootstrap**.
+## Datos que debe completar el equipo
+- Reemplazar las cuatro imágenes SVG de demostración en `assets/artworks/` por ilustraciones autorizadas del artista.
+- Cambiar títulos y descripciones de muestra en `index.php` si aún no hay base de datos conectada.
+- Reemplazar `correo@ejemplo.com` y `https://instagram.com/` por los datos reales confirmados por el cliente.
+- Completar la presentación provisional de la sección “Sobre SHT”.
 
----
+## MySQL (opcional para esta demo)
+La portada intenta consultar la tabla `dibujos` usando `config/database.php`. Si la conexión no está disponible, muestra las obras SVG de demostración. Si se habilita MySQL, configura las credenciales para tu entorno y ejecuta `install.php` solo si realmente necesitas las tablas heredadas. No publiques credenciales reales ni dejes el instalador accesible en producción.
 
-## 🛠️ Stack Tecnológico
+## Nota sobre funcionalidades heredadas
+Los archivos `login.php`, `admin.php`, `logout.php` e `install.php` se conservan como parte del código recibido, pero no aparecen en la navegación pública porque autenticación y panel de administración no están confirmados dentro del MVP actual.
 
-El proyecto está diseñado bajo la siguiente estructura tecnológica (sujeta a definición según el entorno final):
+## Accesibilidad considerada
+- Contraste y tipografía legible.
+- Control manual de tema oscuro/claro.
+- Estados de foco visibles y enlace para saltar al contenido.
+- Respeto a `prefers-reduced-motion`.
+- La animación de entrada no es esencial para acceder al contenido.
 
-* **Frontend:** 
-  * HTML5, CSS3, JavaScript / React
-  * **Framework CSS:** Bootstrap (para diseño adaptativo y responsive)
-* **Backend:** Node.js / PHP
-* **Base de Datos:** PostgreSQL / MySQL / MongoDB
-* **Pasarela de Pagos (Por definir):** 
-  * Stripe / PayPal / Mercado Pago
-  * Webpay Plus
-  * *Alternativa CMS:* WordPress (en evaluación)
+Este paquete es un prototipo funcional en PHP/CSS/JS inspirado en un diseño de alta fidelidad; no es un archivo nativo `.fig` de Figma.
