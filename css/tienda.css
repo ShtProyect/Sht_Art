@@ -1,0 +1,85 @@
+/* SHT — tienda, botón Tienda, botón Iniciar sesión y login.
+   Usa las variables de style.css. Cárgalo DESPUÉS de style.css. */
+
+/* Grupo de acciones a la derecha del header */
+.header-actions{display:flex;align-items:center;gap:10px}
+
+/* Botón Tienda en el menú */
+.main-nav .nav-shop{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border:1px solid var(--teal);border-radius:30px;color:var(--teal);font-weight:600;transition:background .2s,color .2s,transform .2s}
+.main-nav .nav-shop:hover,.main-nav .nav-shop:focus-visible,.main-nav .nav-shop[aria-current="page"]{background:var(--teal);color:var(--bg);transform:translateY(-1px)}
+
+/* Botón Iniciar sesión (arriba a la derecha) */
+.login-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:30px;border:1px solid var(--burgundy);background:var(--burgundy);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;transition:background .2s,border-color .2s}
+.login-btn:hover{background:var(--burgundy2);border-color:var(--burgundy2)}
+
+/* Botón carrito */
+.cart-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:30px;padding:9px 14px;background:transparent;color:var(--text);font-size:12px;cursor:pointer}
+.cart-toggle:hover{border-color:var(--teal)}
+.cart-count{min-width:20px;height:20px;padding:0 5px;display:inline-grid;place-items:center;border-radius:20px;background:var(--teal);color:var(--bg);font-size:11px;font-weight:700}
+
+/* Tienda */
+.shop-page{padding-top:80px;padding-bottom:110px}
+.shop-page h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;line-height:1.08;letter-spacing:-.035em;font-size:clamp(44px,5vw,65px);margin:0}
+.shop-page h1 em{color:var(--teal);font-weight:500}
+.shop-filters{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 44px}
+.chip{cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:30px;padding:8px 16px;font-size:12px}
+.chip:hover{border-color:var(--teal);color:var(--text)}
+.chip.is-active{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:48px 30px}
+.product-card{display:flex;flex-direction:column}
+.product-card[hidden]{display:none}
+.product-image{background:var(--surface);overflow:hidden;border:1px solid var(--line)}
+.product-image img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.product-card:hover .product-image img{transform:scale(1.035)}
+.product-info{padding-top:16px}
+.product-info h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;margin:0 0 14px}
+.product-buy{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.product-price{font-size:15px}
+.product-buy .button{padding:10px 16px;cursor:pointer}
+
+/* Carrito lateral */
+.cart-backdrop{position:fixed;inset:0;z-index:60;background:rgba(10,7,10,.6)}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;z-index:61;width:min(420px,100%);display:flex;flex-direction:column;padding:26px;background:var(--surface);color:var(--text);border-left:1px solid var(--line);box-shadow:var(--shadow)}
+.cart-drawer[hidden],.cart-backdrop[hidden]{display:none}
+.cart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cart-head h2{font-family:'Playfair Display',serif;font-weight:500;font-size:28px;margin:0}
+.cart-close{background:none;border:0;color:var(--text);font-size:32px;line-height:1;cursor:pointer}
+.cart-list{list-style:none;margin:0;padding:0;flex:1;overflow-y:auto}
+.cart-list li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.cart-list strong{font-weight:600;font-size:14px}
+.cart-list small{display:block;color:var(--muted);font-size:11px}
+.cart-qty{display:flex;align-items:center;gap:10px}
+.cart-qty button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+.cart-qty button:hover{border-color:var(--teal);color:var(--teal)}
+.cart-empty{color:var(--muted);font-size:13px}
+.cart-foot{display:grid;gap:14px;padding-top:18px}
+.cart-total{display:flex;justify-content:space-between;font-size:18px}
+.cart-foot .button{justify-content:center;cursor:pointer}
+.cart-foot .button[disabled]{opacity:.45;cursor:not-allowed}
+body.cart-open{overflow:hidden}
+
+/* Login */
+.auth-page{min-height:calc(100vh - 82px);display:grid;place-items:center;padding:60px 24px}
+.auth-card{width:min(440px,100%);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);padding:40px 34px}
+.auth-card h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:38px;line-height:1.1;letter-spacing:-.03em;margin:0 0 8px}
+.auth-card h1 em{color:var(--teal);font-weight:500}
+.auth-lead{color:var(--muted);font-size:13px;margin:0 0 28px}
+.field{display:grid;gap:7px;margin-bottom:18px}
+.field label{font-size:12px;font-weight:600}
+.field input{width:100%;padding:13px 14px;background:var(--bg);color:var(--text);border:1px solid var(--line);font:inherit;font-size:14px}
+.field input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 30%,transparent)}
+.auth-card .button{width:100%;justify-content:center;cursor:pointer;margin-top:6px}
+.auth-error{background:color-mix(in srgb,var(--burgundy) 25%,transparent);border:1px solid var(--burgundy2);padding:12px 14px;font-size:13px;margin-bottom:20px}
+.auth-back{display:inline-block;margin-top:22px}
+
+/* Móvil */
+@media(max-width:800px){
+  .header-actions{gap:8px}
+  .login-label{display:none}
+  .login-btn{padding:9px 12px}
+  .cart-toggle{padding:9px 12px}
+  .main-nav .nav-shop{justify-content:center;align-self:flex-start}
+  .shop-page{padding-top:60px}
+  .auth-page{min-height:calc(100vh - 70px)}
+}
+@media(prefers-reduced-motion:reduce){.product-image img,.main-nav .nav-shop{transition:none}}

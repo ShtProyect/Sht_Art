@@ -1,4 +1,5 @@
 <?php
+session_start();
 // SHT — portafolio artístico. Funciona como demo sin BD y usa MySQL si está configurado.
 $works = [];
 try {
@@ -25,15 +26,24 @@ if (!$works) $works = $demo;
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#21171f"><meta name="description" content="SHT — portafolio e ilustraciones.">
-  <title>SHT — Portafolio artístico</title><link rel="stylesheet" href="css/style.css">
+  <title>SHT — Portafolio artístico</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tienda.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 <header class="site-header">
   <a class="brand" href="#inicio" aria-label="SHT, inicio"><span class="brand-mark">S</span><span>SHT<span class="brand-dot">.</span></span></a>
   <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-  <nav class="main-nav" aria-label="Navegación principal"><a href="#galeria">Galería</a><a href="#sobre">Sobre SHT</a><a href="#contacto">Contacto</a></nav>
-  <button class="theme-toggle" type="button" aria-label="Cambiar a tema claro"><span class="theme-icon">☼</span><span class="theme-label">Modo claro</span></button>
+  <nav class="main-nav" aria-label="Navegación principal"><a href="#galeria">Galería</a><a href="#sobre">Sobre SHT</a><a href="#contacto">Contacto</a><a class="nav-shop" href="tienda.php">Tienda <span aria-hidden="true">🛒</span></a></nav>
+  <div class="header-actions">
+    <button class="theme-toggle" type="button" aria-label="Cambiar a tema claro"><span class="theme-icon">☼</span><span class="theme-label">Modo claro</span></button>
+    <?php if (!empty($_SESSION['user'])): ?>
+      <a class="login-btn" href="logout.php" aria-label="Cerrar sesión"><span class="login-icon" aria-hidden="true">👤</span><span class="login-label">Salir (<?= htmlspecialchars($_SESSION['user']['nombre']) ?>)</span></a>
+    <?php else: ?>
+      <a class="login-btn" href="login.php" aria-label="Iniciar sesión"><span class="login-icon" aria-hidden="true">👤</span><span class="login-label">Iniciar sesión</span></a>
+    <?php endif; ?>
+  </div>
 </header>
 <main id="contenido">
   <section class="hero" id="inicio">
