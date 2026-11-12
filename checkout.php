@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <header class="site-header"><a class="brand" href="index.php"><span class="brand-mark">S</span><span>SHT.</span></a>
-        <nav class="main-nav"><a href="tienda.php">← Volver a la tienda</a></nav>
+        <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navegacion-principal">☰</button><nav class="main-nav" id="navegacion-principal" aria-label="Navegación de compra"><a href="tienda.php">← Volver a la tienda</a></nav>
     </header>
     <main class="checkout-wrap">
         <section class="checkout-card">
@@ -98,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </form><?php endif; ?><?php endif; ?>
         </section>
     </main>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

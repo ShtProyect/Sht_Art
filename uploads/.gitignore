@@ -1,0 +1,4 @@
+# No subir obras originales ni datos de clientes al repositorio.
+*
+!.gitignore
+!README.txt

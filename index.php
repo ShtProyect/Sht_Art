@@ -1,23 +1,24 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/media.php';
 // SHT — portafolio artístico. Funciona como demo sin BD y usa MySQL si está configurado.
 $works = [];
 try {
     if (file_exists(__DIR__ . '/config/database.php')) {
         require __DIR__ . '/config/database.php';
         if (isset($pdo)) {
-            $stmt = $pdo->query("SELECT titulo, descripcion, archivo, created_at FROM dibujos ORDER BY created_at DESC");
+            $stmt = $pdo->query("SELECT id, titulo, descripcion, archivo, created_at FROM dibujos ORDER BY created_at DESC");
             foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $i => $d) {
-                $works[] = ['title'=>$d['titulo'], 'description'=>$d['descripcion'] ?: 'Una pieza del universo visual de SHT.', 'image'=>'uploads/'.str_replace('%2F','/',rawurlencode($d['archivo'])), 'date'=>!empty($d['created_at']) ? date('Y', strtotime($d['created_at'])) : 'Obra'];
+                $works[] = ['title'=>$d['titulo'], 'description'=>$d['descripcion'] ?: 'Una pieza del universo visual de SHT.', 'id'=>(int)$d['id'], 'image'=>artwork_public_url((string)$d['archivo']), 'date'=>!empty($d['created_at']) ? date('Y', strtotime($d['created_at'])) : 'Obra'];
             }
         }
     }
 } catch (Throwable $e) { /* La portada sigue funcionando en modo demostración. */ }
 $demo = [
- ['title'=>'Jardín interior','description'=>'Estudio de color, naturaleza y memoria. Obra de muestra para reemplazar por una ilustración del artista.','image'=>'assets/artworks/obra-01.svg','date'=>'Estudio visual'],
- ['title'=>'Entre mundos','description'=>'Personajes y formas que conviven en un mismo universo imaginario.','image'=>'assets/artworks/obra-02.svg','date'=>'Exploración'],
- ['title'=>'Fragmentos','description'=>'Una composición sobre movimiento, textura y pequeños detalles.','image'=>'assets/artworks/obra-03.svg','date'=>'Colección'],
- ['title'=>'Sueño turquesa','description'=>'Contraste de tonos profundos con acentos turquesa.','image'=>'assets/artworks/obra-04.svg','date'=>'Color'],
+ ['title'=>'Jardín interior','description'=>'Estudio de color, naturaleza y memoria. Obra de muestra para reemplazar por una ilustración del artista.','image'=>'images/demo/obra-01.svg','date'=>'Estudio visual'],
+ ['title'=>'Entre mundos','description'=>'Personajes y formas que conviven en un mismo universo imaginario.','image'=>'images/demo/obra-02.svg','date'=>'Exploración'],
+ ['title'=>'Fragmentos','description'=>'Una composición sobre movimiento, textura y pequeños detalles.','image'=>'images/demo/obra-03.svg','date'=>'Colección'],
+ ['title'=>'Sueño turquesa','description'=>'Contraste de tonos profundos con acentos turquesa.','image'=>'images/demo/obra-04.svg','date'=>'Color'],
 ];
 if (!$works) $works = $demo;
 ?>
@@ -34,8 +35,8 @@ if (!$works) $works = $demo;
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 <header class="site-header">
   <a class="brand" href="#inicio" aria-label="SHT, inicio"><span class="brand-mark">S</span><span>SHT<span class="brand-dot">.</span></span></a>
-  <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-  <nav class="main-nav" aria-label="Navegación principal"><a href="#galeria">Galería</a><a href="#sobre">Sobre SHT</a><a href="#contacto">Contacto</a><a class="nav-shop" href="tienda.php">Tienda <span aria-hidden="true">🛒</span></a></nav>
+  <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navegacion-principal">☰</button>
+  <nav class="main-nav" id="navegacion-principal" aria-label="Navegación principal"><a href="#galeria">Galería</a><a href="#sobre">Sobre SHT</a><a href="#contacto">Contacto</a><a class="nav-shop" href="tienda.php">Tienda <span aria-hidden="true">🛒</span></a></nav>
   <div class="header-actions">
     <button class="theme-toggle" type="button" aria-label="Cambiar a tema claro"><span class="theme-icon">☼</span><span class="theme-label">Modo claro</span></button>
     <?php if (!empty($_SESSION['user_id']) && ($_SESSION['rol'] ?? '') === 'admin'): ?><a class="login-btn" href="admin.php">Administración</a><?php endif; ?>
@@ -50,7 +51,7 @@ if (!$works) $works = $demo;
   <section class="hero" id="inicio">
     <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
     <div class="hero-copy"><p class="eyebrow"><span></span> PORTAFOLIO DE ILUSTRACIÓN</p><h1>Un mundo propio,<br><em>trazo a trazo.</em></h1><p class="hero-lead">Bienvenido al universo visual de <strong>SHT</strong>. Un espacio para descubrir ilustraciones, ideas y pequeños mundos hechos a mano.</p><div class="hero-actions"><a class="button button-primary" href="#galeria">Explorar obras <span>↘</span></a><a class="text-link" href="#sobre">Conocer al artista <span>→</span></a></div></div>
-    <div class="hero-art" aria-label="Composición abstracta decorativa"><div class="art-frame"><img src="assets/artworks/obra-01.svg" alt="Ilustración abstracta de muestra en tonos burdeos y turquesa"></div><div class="art-sticker">ARTE<br>INDEPENDIENTE</div><div class="art-caption"><span>01 / UNIVERSO SHT</span><span>✳</span></div></div>
+    <div class="hero-art" aria-label="Composición abstracta decorativa"><div class="art-frame"><img src="<?= htmlspecialchars($works[0]['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($works[0]['title'], ENT_QUOTES, 'UTF-8') ?>"></div><div class="art-sticker">ARTE<br>INDEPENDIENTE</div><div class="art-caption"><span>01 / UNIVERSO SHT</span><span>✳</span></div></div>
     <a class="scroll-cue" href="#galeria"><span class="scroll-line"></span> DESLIZA PARA EXPLORAR</a>
   </section>
   <section class="intro-strip"><p>ILUSTRACIÓN · COLOR · EXPERIMENTACIÓN</p><span>✳</span><p>UNA MIRADA PERSONAL AL ARTE</p></section>
@@ -59,8 +60,8 @@ if (!$works) $works = $demo;
     <div class="gallery-grid">
     <?php foreach ($works as $i=>$w): ?>
       <article class="work-card reveal" style="--delay:<?= (int)($i%4)*90 ?>ms">
-        <button class="work-image" type="button" data-image="<?= htmlspecialchars($w['image'], ENT_QUOTES) ?>" data-title="<?= htmlspecialchars($w['title'], ENT_QUOTES) ?>" data-description="<?= htmlspecialchars($w['description'], ENT_QUOTES) ?>" aria-label="Ampliar obra: <?= htmlspecialchars($w['title']) ?>"><img loading="lazy" src="<?= htmlspecialchars($w['image']) ?>" alt="<?= htmlspecialchars($w['title']) ?>"><span class="image-open">↗</span></button>
-        <div class="work-meta"><div><p class="work-category"><?= htmlspecialchars($w['date']) ?></p><h3><?= htmlspecialchars($w['title']) ?></h3></div><span class="work-number"><?= str_pad((string)($i+1),2,'0',STR_PAD_LEFT) ?></span></div>
+        <button class="work-image" type="button" data-artwork-id="<?= (int)($w['id'] ?? 0) ?>" data-image="<?= htmlspecialchars($w['image'], ENT_QUOTES) ?>" data-title="<?= htmlspecialchars($w['title'], ENT_QUOTES) ?>" data-description="<?= htmlspecialchars($w['description'], ENT_QUOTES) ?>" aria-label="Ampliar obra: <?= htmlspecialchars($w['title']) ?>"><img loading="lazy" src="<?= htmlspecialchars($w['image']) ?>" alt="<?= htmlspecialchars($w['title']) ?>"><span class="image-open">↗</span></button>
+        <div class="work-meta"><div><p class="work-category"><?= htmlspecialchars($w['date']) ?></p><h3><?= htmlspecialchars($w['title']) ?></h3></div><span class="work-number"><?= isset($w['id']) ? '#' . (int)$w['id'] : str_pad((string)($i+1),2,'0',STR_PAD_LEFT) ?></span></div>
         <p class="work-description"><?= htmlspecialchars($w['description']) ?></p>
       </article>
     <?php endforeach; ?>

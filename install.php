@@ -13,7 +13,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS dibujos (
 $pdo->exec("CREATE TABLE IF NOT EXISTS productos (
  id INT AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(140) NOT NULL, descripcion TEXT NULL,
  categoria VARCHAR(60) NOT NULL DEFAULT 'Print', precio INT UNSIGNED NOT NULL,
- stock INT UNSIGNED NOT NULL DEFAULT 0, imagen VARCHAR(255) NOT NULL DEFAULT 'assets/artworks/obra-01.svg',
+ stock INT UNSIGNED NOT NULL DEFAULT 0, imagen VARCHAR(255) NOT NULL DEFAULT 'images/demo/obra-01.svg',
  activo TINYINT(1) NOT NULL DEFAULT 1, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -45,10 +45,10 @@ if (!$exists) {
 $count = (int)$pdo->query("SELECT COUNT(*) FROM productos")->fetchColumn();
 if (!$count) {
     $seed = [
-        ['Jardín interior (original)', 'Obra original firmada', 'Obra original', 120000, 1, 'assets/artworks/obra-01.svg'],
-        ['Print Entre mundos A4', 'Impresión artística tamaño A4', 'Print', 12000, 15, 'assets/artworks/obra-02.svg'],
-        ['Pack de stickers Fragmentos', 'Pack de stickers ilustrados', 'Stickers', 4500, 30, 'assets/artworks/obra-03.svg'],
-        ['Pin Sueño turquesa', 'Pin esmaltado', 'Pines', 6000, 20, 'assets/artworks/obra-04.svg']
+        ['Jardín interior (original)', 'Obra original firmada', 'Obra original', 120000, 1, 'images/demo/obra-01.svg'],
+        ['Print Entre mundos A4', 'Impresión artística tamaño A4', 'Print', 12000, 15, 'images/demo/obra-02.svg'],
+        ['Pack de stickers Fragmentos', 'Pack de stickers ilustrados', 'Stickers', 4500, 30, 'images/demo/obra-03.svg'],
+        ['Pin Sueño turquesa', 'Pin esmaltado', 'Pines', 6000, 20, 'images/demo/obra-04.svg']
     ];
     $s = $pdo->prepare("INSERT INTO productos(nombre,descripcion,categoria,precio,stock,imagen) VALUES(?,?,?,?,?,?)");
     foreach ($seed as $p) $s->execute($p);
