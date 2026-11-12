@@ -1,23 +1,103 @@
 <?php
-require 'config/database.php'; require 'includes/auth.php'; require 'includes/csrf.php';
-$cart=$_SESSION['cart']??[]; $items=[]; $total=0;
-if($cart){$ids=array_map('intval',array_keys($cart));$in=implode(',',array_fill(0,count($ids),'?'));$q=$pdo->prepare("SELECT id,nombre,precio,stock,activo FROM productos WHERE id IN ($in)");$q->execute($ids);foreach($q->fetchAll() as $p){$qty=(int)$cart[$p['id']];if($p['activo']&&$qty>0){$items[]=$p+['cantidad'=>$qty];$total+=$p['precio']*$qty;}}}
-$error='';$success=false;$orderId=0;
-if($_SERVER['REQUEST_METHOD']==='POST'){
- verify_csrf();
- $name=trim($_POST['nombre']??'');$email=filter_var(trim($_POST['email']??''),FILTER_VALIDATE_EMAIL);$phone=trim($_POST['telefono']??'');$address=trim($_POST['direccion']??'');$notes=trim($_POST['notas']??'');
- if(!$items)$error='Tu carrito está vacío o contiene productos no disponibles.';
- elseif($name===''||!$email||$address==='')$error='Completa nombre, correo y dirección correctamente.';
- else{
-  try{$pdo->beginTransaction();$fresh=[];$total=0;
-   foreach($cart as $pid=>$qty){$s=$pdo->prepare("SELECT id,nombre,precio,stock,activo FROM productos WHERE id=? FOR UPDATE");$s->execute([(int)$pid]);$p=$s->fetch();$qty=(int)$qty;if(!$p||!$p['activo']||$qty<1||$qty>$p['stock'])throw new RuntimeException('El stock de uno de los productos cambió. Vuelve a revisar tu carrito.');$p['cantidad']=$qty;$fresh[]=$p;$total+=$p['precio']*$qty;}
-   $s=$pdo->prepare("INSERT INTO pedidos(nombre_cliente,email,telefono,direccion,notas,total,metodo_pago) VALUES(?,?,?,?,?,?,'Transferencia')");$s->execute([$name,$email,$phone,$address,$notes,$total]);$orderId=(int)$pdo->lastInsertId();
-   $detail=$pdo->prepare("INSERT INTO detalle_pedido(pedido_id,producto_id,nombre_producto,cantidad,precio_unitario) VALUES(?,?,?,?,?)");
-   $stock=$pdo->prepare("UPDATE productos SET stock=stock-? WHERE id=?");
-   foreach($fresh as $p){$detail->execute([$orderId,$p['id'],$p['nombre'],$p['cantidad'],$p['precio']]);$stock->execute([$p['cantidad'],$p['id']]);}
-   $pdo->prepare("INSERT INTO pagos(pedido_id,proveedor,estado) VALUES(?,'Transferencia','pendiente')")->execute([$orderId]);$pdo->commit();$_SESSION['cart']=[];$success=true;
-  }catch(Throwable $e){if($pdo->inTransaction())$pdo->rollBack();$error=$e instanceof RuntimeException?$e->getMessage():'No se pudo registrar el pedido. Intenta nuevamente.';}
- }
+require 'config/database.php';
+require 'includes/auth.php';
+require 'includes/csrf.php';
+$cart = $_SESSION['cart'] ?? [];
+$items = [];
+$total = 0;
+if ($cart) {
+    $ids = array_map('intval', array_keys($cart));
+    $in = implode(',', array_fill(0, count($ids), '?'));
+    $q = $pdo->prepare("SELECT id,nombre,precio,stock,activo FROM productos WHERE id IN ($in)");
+    $q->execute($ids);
+    foreach ($q->fetchAll() as $p) {
+        $qty = (int)$cart[$p['id']];
+        if ($p['activo'] && $qty > 0) {
+            $items[] = $p + ['cantidad' => $qty];
+            $total += $p['precio'] * $qty;
+        }
+    }
 }
-?><!doctype html><html lang="es" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Finalizar compra — SHT</title><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/tienda.css"><link rel="stylesheet" href="css/admin.css"></head><body><header class="site-header"><a class="brand" href="index.php"><span class="brand-mark">S</span><span>SHT.</span></a><nav class="main-nav"><a href="tienda.php">← Volver a la tienda</a></nav></header><main class="checkout-wrap"><section class="checkout-card"><p class="eyebrow">TU PEDIDO</p><?php if($success):?><h1>¡Gracias por tu <em>compra!</em></h1><p>Tu pedido <b>#<?=$orderId?></b> quedó registrado y está pendiente de confirmación del pago.</p><p>El artista se pondrá en contacto contigo al correo indicado para coordinar la transferencia y el envío.</p><a class="button button-primary" href="tienda.php">Volver a la tienda</a>
-<?php else:?><h1>Finalizar <em>compra</em></h1><?php if($error):?><p class="admin-alert error"><?=h($error)?></p><?php endif;?><?php if(!$items):?><p>Tu carrito está vacío.</p><a href="tienda.php" class="button button-primary">Ir a la tienda</a><?php else:?><div class="order-summary"><h2>Resumen</h2><?php foreach($items as $p):?><p><?=h($p['nombre'])?> × <?=$p['cantidad']?> <strong><?=clp($p['precio']*$p['cantidad'])?></strong></p><?php endforeach;?><hr><p class="total-line">Total <strong><?=clp($total)?></strong></p></div><form method="post" class="product-form checkout-form"><?=csrf_field()?><label>Nombre completo<input name="nombre" required maxlength="120" value="<?=h($_POST['nombre']??'')?>"></label><label>Correo electrónico<input type="email" name="email" required value="<?=h($_POST['email']??'')?>"></label><label>Teléfono (opcional)<input name="telefono" value="<?=h($_POST['telefono']??'')?>"></label><label class="wide">Dirección de envío<input name="direccion" required value="<?=h($_POST['direccion']??'')?>"></label><label class="wide">Notas del pedido (opcional)<textarea name="notas" rows="3"><?=h($_POST['notas']??'')?></textarea></label><div class="wide payment-note"><b>Medio de pago: transferencia bancaria</b><p>Al confirmar se registrará el pedido como pendiente. Los datos para transferir se coordinarán por correo con el artista. No se realiza ningún cobro automático en esta versión.</p></div><button class="button button-primary" type="submit">Confirmar pedido · <?=clp($total)?></button></form><?php endif;?><?php endif;?></section></main></body></html>
+$error = '';
+$success = false;
+$orderId = 0;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
+    $name = trim($_POST['nombre'] ?? '');
+    $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
+    $phone = trim($_POST['telefono'] ?? '');
+    $address = trim($_POST['direccion'] ?? '');
+    $notes = trim($_POST['notas'] ?? '');
+    if (!$items) $error = 'Tu carrito está vacío o contiene productos no disponibles.';
+    elseif ($name === '' || !$email || $address === '') $error = 'Completa nombre, correo y dirección correctamente.';
+    else {
+        try {
+            $pdo->beginTransaction();
+            $fresh = [];
+            $total = 0;
+            foreach ($cart as $pid => $qty) {
+                $s = $pdo->prepare("SELECT id,nombre,precio,stock,activo FROM productos WHERE id=? FOR UPDATE");
+                $s->execute([(int)$pid]);
+                $p = $s->fetch();
+                $qty = (int)$qty;
+                if (!$p || !$p['activo'] || $qty < 1 || $qty > $p['stock']) throw new RuntimeException('El stock de uno de los productos cambió. Vuelve a revisar tu carrito.');
+                $p['cantidad'] = $qty;
+                $fresh[] = $p;
+                $total += $p['precio'] * $qty;
+            }
+            $s = $pdo->prepare("INSERT INTO pedidos(nombre_cliente,email,telefono,direccion,notas,total,metodo_pago) VALUES(?,?,?,?,?,?,'Transferencia')");
+            $s->execute([$name, $email, $phone, $address, $notes, $total]);
+            $orderId = (int)$pdo->lastInsertId();
+            $detail = $pdo->prepare("INSERT INTO detalle_pedido(pedido_id,producto_id,nombre_producto,cantidad,precio_unitario) VALUES(?,?,?,?,?)");
+            $stock = $pdo->prepare("UPDATE productos SET stock=stock-? WHERE id=?");
+            foreach ($fresh as $p) {
+                $detail->execute([$orderId, $p['id'], $p['nombre'], $p['cantidad'], $p['precio']]);
+                $stock->execute([$p['cantidad'], $p['id']]);
+            }
+            $pdo->prepare("INSERT INTO pagos(pedido_id,proveedor,estado) VALUES(?,'Transferencia','pendiente')")->execute([$orderId]);
+            $pdo->commit();
+            $_SESSION['cart'] = [];
+            $success = true;
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            $error = $e instanceof RuntimeException ? $e->getMessage() : 'No se pudo registrar el pedido. Intenta nuevamente.';
+        }
+    }
+}
+?>
+<!doctype html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Finalizar compra — SHT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tienda.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <header class="site-header"><a class="brand" href="index.php"><span class="brand-mark">S</span><span>SHT.</span></a>
+        <nav class="main-nav"><a href="tienda.php">← Volver a la tienda</a></nav>
+    </header>
+    <main class="checkout-wrap">
+        <section class="checkout-card">
+            <p class="eyebrow">TU PEDIDO</p><?php if ($success): ?><h1>¡Gracias por tu <em>compra!</em></h1>
+                <p>Tu pedido <b>#<?= $orderId ?></b> quedó registrado y está pendiente de confirmación del pago.</p>
+                <p>El artista se pondrá en contacto contigo al correo indicado para coordinar la transferencia y el envío.</p><a class="button button-primary" href="tienda.php">Volver a la tienda</a>
+            <?php else: ?><h1>Finalizar <em>compra</em></h1><?php if ($error): ?><p class="admin-alert error"><?= h($error) ?></p><?php endif; ?><?php if (!$items): ?><p>Tu carrito está vacío.</p><a href="tienda.php" class="button button-primary">Ir a la tienda</a><?php else: ?><div class="order-summary">
+                        <h2>Resumen</h2><?php foreach ($items as $p): ?><p><?= h($p['nombre']) ?> × <?= $p['cantidad'] ?> <strong><?= clp($p['precio'] * $p['cantidad']) ?></strong></p><?php endforeach; ?>
+                        <hr>
+                        <p class="total-line">Total <strong><?= clp($total) ?></strong></p>
+                    </div>
+                    <form method="post" class="product-form checkout-form"><?= csrf_field() ?><label>Nombre completo<input name="nombre" required maxlength="120" value="<?= h($_POST['nombre'] ?? '') ?>"></label><label>Correo electrónico<input type="email" name="email" required value="<?= h($_POST['email'] ?? '') ?>"></label><label>Teléfono (opcional)<input name="telefono" value="<?= h($_POST['telefono'] ?? '') ?>"></label><label class="wide">Dirección de envío<input name="direccion" required value="<?= h($_POST['direccion'] ?? '') ?>"></label><label class="wide">Notas del pedido (opcional)<textarea name="notas" rows="3"><?= h($_POST['notas'] ?? '') ?></textarea></label>
+                        <div class="wide payment-note"><b>Medio de pago: transferencia bancaria</b>
+                            <p>Al confirmar se registrará el pedido como pendiente. Los datos para transferir se coordinarán por correo con el artista. No se realiza ningún cobro automático en esta versión.</p>
+                        </div><button class="button button-primary" type="submit">Confirmar pedido · <?= clp($total) ?></button>
+                    </form><?php endif; ?><?php endif; ?>
+        </section>
+    </main>
+</body>
+
+</html>
